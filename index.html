@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8"/>
+	<title>HTML using JS</title>
+</head>
+
+<body>
+
+	<div class="container" style="margin-top:100px;margin-bottom:100px;">
+		<input type="file" id="file_input">
+		<button id="process_file_btn" onclick="process_file();">Process File</button>
+	</div>
+
+	<div class="container" id="table">
+	</div>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+function process_file() {
+	let attachment = document.getElementById("file_input");
+	const reader = new FileReader();
+	reader.readAsText(attachment.files[0]);
+	reader.onload = () => { csv_to_array(reader.result); };
+}
+
+function csv_to_array(data) {
+	let rows = [];
+	let text_lines = data.split(/\n/);
+	for (var i=0; i<text_lines.length; i++) {
+		let row = text_lines[i].split(",");
+		rows.push(row);
+	}
+	create_table(rows);
+}
+
+function create_table(data) {
+	let table = document.createElement("table");
+	table.setAttribute("class", "table");
+	table.style.textAlign = "center";
+
+	let thead = document.createElement("thead");
+	let tr = document.createElement("tr");
+	tr.style.backgroundColor = "#e6ee9c";
+	let th;
+	for (var i=0; i<3; i++) {
+		th = document.createElement("th");
+		th.innerHTML = i;
+		tr.appendChild(th);
+	}
+	thead.appendChild(tr);
+
+	let tbody = document.createElement("tbody");
+	let colors = ["#1de9b6", "#64ffda", "#a7ffeb"];
+	for (var i=0; i<data.length; i++) {
+		tr = document.createElement("tr");
+		tr.style.backgroundColor = colors[i];
+		let td;
+		let curr_row = data[i];
+		for (var j=0; j<curr_row.length; j++) {
+			td = document.createElement("td");
+			td.innerHTML = curr_row[j];
+			tr.appendChild(td);
+		}
+		tbody.appendChild(tr);
+	}
+
+	let table_div = document.getElementById("table");
+	table.appendChild(thead);
+	table.appendChild(tbody);
+	table_div.innerHTML = '';
+	table_div.appendChild(table);
+}
+
+</script>
+
+
+</body>
+</html>
